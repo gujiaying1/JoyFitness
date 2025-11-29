@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace JoyRiseFitness.Models
 {
@@ -11,5 +11,7 @@ namespace JoyRiseFitness.Models
         public string ImgUrl { get; set; }
         public List<string> Steps { get; set; } = new List<string>();
         public List<string> Alternatives { get; set; } = new List<string>();
+
+        public string ShortDesc { get; set; }
     }
 }
