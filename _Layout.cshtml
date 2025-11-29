@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - JoyRise Fitness</title>
+    <link href="@Url.Content("~/Content/site.css")" rel="stylesheet" />
+    @RenderSection("head", required: false)
+</head>
+<body>
+    <header class="top">
+        <h1 class="logo">JoyRise Fitness</h1>
+        <nav>
+            <a href="@Url.Action("Index","Home")">首页</a>
+            <a href="@Url.Action("Index","Equipment")">器材教程</a>
+            <a href="@Url.Action("Index","Generator")">训练生成器</a>
+            <a href="@Url.Action("Index","Reservation")">预约</a>
+            <a href="@Url.Action("Dashboard","Member")">会员中心</a>
+            <a href="@Url.Action("Index","Contact")">联系我们</a>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - JoyRise Fitness · 悦动 · 悦成长 · 悦自己</p>
+        <p>
+            <a href="http://validator.w3.org/check?uri=referer" target="_blank">W3C HTML</a> |
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank">W3C CSS</a>
+        </p>
+    </footer>
+
+    <script src="@Url.Content("~/Scripts/carousel.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

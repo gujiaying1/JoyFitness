@@ -1,0 +1,29 @@
+@model JoyRiseFitness.Models.Equipment
+@{
+    ViewBag.Title = Model.Name;
+}
+<section class="eq-detail">
+    <h2>@Model.Name</h2>
+    <div class="grid">
+        <div class="left">
+            <img src="@Model.ImgUrl" alt="@Model.Name" />
+            <p class="tags">部位：@Model.Part | 难度：@Model.Difficulty</p>
+            <button class="btn" onclick="toggleFav(@Model.Id,this)">? 收藏</button>
+        </div>
+        <div class="right">
+            <h3>动作步骤</h3>
+            <ol>
+                <li>调整座椅/杠铃至合适高度，保持身体稳定；</li>
+                <li>核心收紧，动作路径垂直向上；</li>
+                <li>顶端收缩 1 秒，控制还原至起始位置。</li>
+            </ol>
+            <h3>替代动作</h3>
+            <ul>
+                <li>@Model.Part 部位同难度动作 A（稍后关联）</li>
+                <li>@Model.Part 部位同难度动作 B</li>
+            </ul>
+        </div>
+    </div>
+</section>
+<script src="@Url.Content("~/Content/favorite.js")"></script>
+

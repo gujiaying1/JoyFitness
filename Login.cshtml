@@ -1,0 +1,18 @@
+@{
+    ViewBag.Title = "登录";
+}
+<h2>登录</h2>
+@Html.ValidationSummary()
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        <label>用户名</label>
+        <input name="userName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>密码</label>
+        <input name="password" type="password" class="form-control" required />
+    </div>
+    <button class="btn">登录</button>
+    <a href="@Url.Action("Register")" class="btn btn-link">去注册</a>
+}v

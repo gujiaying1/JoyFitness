@@ -1,0 +1,23 @@
+@{
+    ViewBag.Title = "会员中心";
+}
+<h2>你好，@ViewBag.Uname</h2>
+
+<div class="dash-cards">
+    <a href="@Url.Action("MyReservation")" class="dash-card">
+        <h3>我的预约</h3>
+        <p>查看或取消预约</p>
+    </a>
+    <a href="@Url.Action("MyFavorite")" class="dash-card">
+        <h3>我的收藏</h3>
+        <p>已收藏器材/动作</p>
+    </a>
+    <a href="@Url.Action("Calorie")" class="dash-card">
+        <h3>卡路里记录</h3>
+        <p>手动输入或估算消耗</p>
+    </a>
+</div>
+
+<form action="@Url.Action("Logout")" method="post" style="margin-top:2rem;">
+    <button class="btn btn-secondary">退出登录</button>
+</form>
