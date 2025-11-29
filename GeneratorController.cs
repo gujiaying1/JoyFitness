@@ -1,50 +1,82 @@
-﻿using JoyRiseFitness.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using JoyRiseFitness.Models;
 
 namespace JoyRiseFitness.Controllers
 {
     public class GeneratorController : Controller
     {
-        // 静态动作池（复用 Workout 类）
-        private static List<Workout> _db = WorkoutSeed.Seed();
 
-        // 生成器主页
+        public ActionResult Index1()
+        {
+            System.IO.File.AppendAllText(Server.MapPath("~/log.txt"), "Index 进了\r\n");
+            return View(new WorkoutGenViewModel());
+        }
+        private static readonly List<Workout> _db = WorkoutSeed.Seed();
+
+        // 首页
         public ActionResult Index() => View(new WorkoutGenViewModel());
 
+        // 生成动作（AJAX）
         // 生成动作（AJAX）
         [HttpPost]
         public ActionResult Generate(WorkoutGenViewModel vm)
         {
-            var query = _db.AsEnumerable();
-            if (vm.Part.HasValue) query = query.Where(w => w.Part == vm.Part.Value);
-            if (!string.IsNullOrEmpty(vm.Equipment))
-                query = query.Where(w => w.Name.Contains(vm.Equipment)); // 简易匹配
+            try
+            {
+                System.IO.File.AppendAllText(Server.MapPath("~/log.txt"), $"Generate called: Part={vm.Part}, Level={vm.Level}, Goal={vm.Goal}\r\n");
 
-            var rnd = new Random();
-            vm.Generated = query.OrderBy(x => rnd.Next()).Take(5).ToList(); // 随机5个
-            return PartialView("_GeneratedList", vm.Generated);
+                var q = _db.AsEnumerable();
+                if (vm.Part.HasValue) q = q.Where(w => w.Part == vm.Part);
+                if (vm.Level.HasValue) q = q.Where(w => w.Difficulty == vm.Level.ToString());
+                if (vm.Goal.HasValue) q = GoalFilter(q, vm.Goal.Value);
+
+                var generated = q.OrderBy(x => Guid.NewGuid()).Take(6).ToList();
+                vm.Generated = generated;
+
+                System.IO.File.AppendAllText(Server.MapPath("~/log.txt"), $"Generated {generated.Count} items\r\n");
+
+                return PartialView("_GeneratedList", generated);
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText(Server.MapPath("~/log.txt"), $"Error: {ex}\r\n");
+                return Content("<p>Error generating workout plan. Please try again.</p>");
+            }
         }
 
-        // 保存到 Session（作业级）
+        // 目标过滤（C# 7.3 传统 switch）
+        private IEnumerable<Workout> GoalFilter(IEnumerable<Workout> src, Goal g)
+        {
+            switch (g)
+            {
+                case Goal.LoseFat:
+                    return src.Where(w => w.Part == MusclePart.Core || w.Part == MusclePart.Legs);
+                case Goal.BuildMuscle:
+                    return src.Where(w => w.Part == MusclePart.Chest || w.Part == MusclePart.Arms);
+                case Goal.Strength:
+                    return src.Where(w => w.Difficulty != "Beginner");
+                case Goal.Endurance:
+                    return src.Where(w => w.Part == MusclePart.Back || w.Part == MusclePart.Legs);
+                default:
+                    return src;
+            }
+        }
+
+        #region 收藏计划
         [HttpPost]
         public ActionResult SavePlan(List<int> ids)
         {
-            // 取出旧计划
-            var oldPlan = Session["MyPlan"] as List<Workout> ?? new List<Workout>();
-            // 追加新动作（去重）
-            var newPlan = _db.Where(w => ids.Contains(w.Id)).ToList();
-            oldPlan.AddRange(newPlan);
-            oldPlan = oldPlan.GroupBy(w => w.Id)   // 按 ID 去重
-                             .Select(g => g.First())
-                             .ToList();
-            Session["MyPlan"] = oldPlan;
-            return Json(new { ok = true, count = oldPlan.Count });
+            var plan = Session["MyPlan"] as List<Workout> ?? new List<Workout>();
+            var add = _db.Where(w => ids.Contains(w.Id)).ToList();
+            plan.AddRange(add);
+            plan = plan.GroupBy(w => w.Id).Select(g => g.First()).ToList();
+            Session["MyPlan"] = plan;
+            return Json(new { ok = true, count = plan.Count });
         }
 
-        // 从计划里删除一个动作
         [HttpPost]
         public ActionResult RemoveFromPlan(int id)
         {
@@ -53,11 +85,12 @@ namespace JoyRiseFitness.Controllers
             Session["MyPlan"] = plan;
             return Json(new { ok = true, count = plan.Count });
         }
-        // 返回“我的计划”Partial
+
         public ActionResult MyPlan()
         {
             var plan = Session["MyPlan"] as List<Workout> ?? new List<Workout>();
             return PartialView("_MyPlan", plan);
         }
+        #endregion
     }
 }
