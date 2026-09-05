@@ -6,6 +6,8 @@ JoyRise Fitness is a fitness web application built with ASP.NET MVC. It helps us
 
 **Live Demo:** [https://gujiaying1.github.io/JoyFitness/](https://gujiaying1.github.io/JoyFitness/)
 
+![JoyRise Fitness home](docs/screenshots/joyrise-home.png)
+
 **Technologies:** C# · ASP.NET MVC · Razor · JavaScript · jQuery · AJAX · HTML · CSS
 
 ## Overview
@@ -60,9 +62,25 @@ The included GitHub Pages demo adapts portfolio-facing interactions to browser-s
 
 ## Screenshots
 
-<!-- Add repository-hosted screenshots here when available. Suggested views: home page, equipment library, workout generator, and equipment detail. -->
+### Home
 
-No repository-hosted screenshots are currently available. Screenshots can be added later under a dedicated directory (for example, `docs/screenshots/`) and linked here.
+![JoyRise Fitness home](docs/screenshots/joyrise-home.png)
+
+### Equipment Discovery
+
+Filtered to show leg exercises using the live demo's muscle-group control.
+
+![Equipment search and filtering](docs/screenshots/joyrise-equipment.png)
+
+### Exercise Detail
+
+![Exercise detail](docs/screenshots/joyrise-detail.png)
+
+### Workout Generator
+
+Generated results for Strength, Intermediate, and Legs selections.
+
+![Workout generator](docs/screenshots/joyrise-generator.png)
 
 ## Running the Original Project Locally
 
